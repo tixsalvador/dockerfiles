@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+    database:
+        image: mysql:latest
+        command: --default-authentication-plugin=mysql_native_password
+        container_name: ${GHOST_DB_CONTAINER_NAME}
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${GHOST_DATABASE}
+            - MYSQL_USER=${GHOST_USER}
+            - MYSQL_PASSWORD=${GHOST_PASSWORD}
+        volumes:
+            - mysql_ghost_dir:/var/www/html
+        networks:
+            - mysql_private
+        restart: unless-stopped
+
+volumes:
+    mysql_ghost_dir:
+network:
+    mysql_private:
+        driver: bridge
