@@ -11,7 +11,7 @@ services:
             - MYSQL_USER=${GHOST_USER}
             - MYSQL_PASSWORD=${GHOST_PASSWORD}
         volumes:
-            - mysql_ghost_dir:/var/www/html
+            - mysql_ghost_dir:/var/lib/mysql
         networks:
             - mysql_private
         restart: unless-stopped
