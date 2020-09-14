@@ -1,4 +1,3 @@
-ll
 version: "3"
 
 services:
@@ -42,5 +41,5 @@ networks:
     mysql_private:
         driver: overlay
     bridge:
-      external:
-        name: bridge
+        external:
+            name: bridge

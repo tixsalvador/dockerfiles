@@ -1,23 +1,24 @@
 version: "3"
 
 services:
-    database:
-        image: mysql:latest
-        command: --default-authentication-plugin=mysql_native_password
-        container_name: ${GHOST_DB_CONTAINER_NAME}
-        environment:
-            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-            - MYSQL_DATABASE=${GHOST_DATABASE}
-            - MYSQL_USER=${GHOST_USER}
-            - MYSQL_PASSWORD=${GHOST_PASSWORD}
-        volumes:
-            - mysql_ghost_dir:/var/lib/mysql
-        networks:
-            - mysql_private
-        restart: unless-stopped
-
-volumes:
-    mysql_ghost_dir:
-network:
-    mysql_private:
-        driver: bridge
+  db1:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_USER=ghost
+      - MYSQL_PASSWORD=
+      - MYSQL_DATABASE=ghost
+  ghost:
+    image: ghost:latest
+    ports:
+      - "80:2368"
+    environment:
+      - database__client=mysql
+      - database__connection__host=
+      - database__connection__user=ghost
+      - database__connection__password=
+      - database__connection__database=ghost
+      - url=http://192.168.99.100:80
+    depends_on:
+      - db1
