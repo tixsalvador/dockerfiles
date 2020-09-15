@@ -19,6 +19,6 @@ services:
       - database__connection__user=ghost
       - database__connection__password=
       - database__connection__database=ghost
-      - url=http://192.168.99.100:80
+      - url=http://10.254.1.28:80
     depends_on:
       - db1
