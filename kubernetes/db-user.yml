@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-admin
+type: Opaque
+data:
+  password: |
+    password-goes-here
