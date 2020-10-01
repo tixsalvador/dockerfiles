@@ -2,33 +2,33 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: mysql-dep
-  name: mysql-svc
+    app: wordpress-db
+  name: wordpress-db-svc
 spec:
   ports:
-    - name: mysql-svc
+    - name: wordpress-db-svc
       port: 3306
       protocol: TCP
   selector:
-    app: mysql-dep
-  type: NodePort
+    app: wordpress-db
+  clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mysql-dep
+  name: wordpress-db
   labels:
-    app: mysql-dep
+    app: wordpress-db
 spec:
   selector:
     matchLabels:
-      app: mysql-dep
+      app: wordpress-db
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql-dep
+        app: wordpress-db
     spec:
       containers:
         - image: mysql
@@ -38,15 +38,26 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-admin
-                  key: password
+                  name: wordpress-secret
+                  key: db_root_password
+            - name: MYSQL_DATABASE
+              value: wordpress
+            - name: MYSQL_USER
+              value: wordpress
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: wordpress-secret
+                  key: db_wordpress_password
           ports:
             - containerPort: 3306
               name: mysql-container
-          volumeMounts:
-            - name: mysql-persistent-storage
-              mountPath: /var/lib/mysql
-      volumes:
-        - name: mysql-persistent-storage
-          persistentVolumeClaim:
-            claimName: mysql-pv-claim
+#          volumeMounts:
+#          #            - name: mysql-persistent-storage
+#          #              mountPath: /var/lib/mysql
+#          #      volumes:
+#          #        - name: mysql-persistent-storage
+#          #          persistentVolumeClaim:
+#          #            claimName: mysql-pv-claim
+#
+#
