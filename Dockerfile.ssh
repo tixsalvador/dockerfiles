@@ -1,9 +1,11 @@
-FROM centos:8
-RUN yum install -y openssh-server
+FROM centos:7
+RUN yum install -y openssh-server sudo
 RUN echo 'root:zaqxswcde' | chpasswd
+RUN useradd -d /home/vagrant -s /bin/bash -g root -G wheel  -u 1000 vagrant
+RUN echo 'vagrant:vagrant' | chpasswd
 RUN ssh-keygen -A
-RUN sed 's/^\(#\|P\).*RootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config -i
-RUN sed 's/^\(#\|P\).*Authentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config -i
+#RUN sed 's/^\(#\|P\).*RootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config -i
+#RUN sed 's/^\(#\|P\).*Authentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config -i
 RUN sed 's/^session.*pam_loginuid.so$/session\toptional\tpam_loginuid.so/'  /etc/pam.d/sshd -i
-RUN rm /run/nologin
+EXPOSE 22
 CMD  ["/usr/sbin/sshd", "-D"]
